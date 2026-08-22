@@ -1,0 +1,77 @@
+name: Android CI Build
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+# Si se empuja dos veces seguidas a la misma rama antes de que termine el
+# build anterior, cancela el viejo en vez de dejarlos correr en paralelo
+# gastando minutos de CI de más.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      # El repo no trae comiteado el binario del Gradle Wrapper
+      # (gradle-wrapper.jar) — solo gradle-wrapper.properties, que fija la
+      # versión (8.6). Esta action instala esa versión exacta directo en
+      # el runner, cachea las distribuciones/dependencias entre corridas,
+      # y deja el comando `gradle` listo para usar sin depender de
+      # ./gradlew.
+      - name: Configurar Gradle 8.6
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: '8.6'
+          cache-read-only: ${{ github.ref != 'refs/heads/main' }}
+
+      # Los runners ubuntu-latest ya traen un Android SDK base, pero fijar
+      # esto explícito evita builds rotos si GitHub cambia qué platforms/
+      # build-tools vienen preinstalados en la imagen — compileSdk/targetSdk
+      # 34 (ver app/build.gradle.kts) quedan garantizados sin importar eso.
+      - name: Configurar Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Tests unitarios
+        run: gradle testDebugUnitTest --stacktrace
+
+      - name: Compilar APK Debug
+        run: gradle assembleDebug --stacktrace
+
+      # Con el soporte multiarquitectura (ver build-config/abi/), este
+      # directorio ya no tiene un único app-debug.apk — tiene uno por ABI
+      # (armeabi-v7a, arm64-v8a) más el universal. Se sube el directorio
+      # completo con un patrón en vez de un nombre fijo, así que agregar
+      # una arquitectura nueva el día de mañana no rompe este step.
+      - name: Subir APKs como artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: olyze-debug-apks
+          path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
+          retention-days: 14
+
+      # Solo se sube si algún paso anterior falló — para poder abrir el
+      # reporte HTML de qué test rompió sin tener que reproducirlo local.
+      - name: Subir reporte de tests (solo si falló algo)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports
+          path: app/build/reports/tests
+          retention-days: 14

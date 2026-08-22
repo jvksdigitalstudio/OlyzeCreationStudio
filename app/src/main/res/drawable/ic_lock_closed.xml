@@ -1,0 +1,45 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.6"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:fillColor="#00000000"
+        android:pathData="M8.5,10.5 V8 a3.5,3.5 0 0 1 7,0 v2.5" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M6.5,10.5 h11 a1.5,1.5 0 0 1 1.5,1.5 v7 a1.5,1.5 0 0 1 -1.5,1.5 h-11 a1.5,1.5 0 0 1 -1.5,-1.5 v-7 a1.5,1.5 0 0 1 1.5,-1.5 Z" />
+    <path
+        android:fillColor="#1C1C1E"
+        android:pathData="M12,14.2 m-1.15,0 a1.15,1.15 0 1 0 2.3,0 a1.15,1.15 0 1 0 -2.3,0 Z" />
+    <path
+        android:fillColor="#1C1C1E"
+        android:pathData="M11.4,14.6 h1.2 v2.4 h-1.2 Z" />
+    <!--
+        Flecha indicadora (pedido del usuario, ver referencia): apunta hacia
+        ARRIBA y va al lado DERECHO del candado — da a entender "esto
+        bloquea solo hacia el canvas/preview", a diferencia de la flecha
+        horizontal del candado de orden (ic_order_lock_*), que apunta a los
+        costados dando a entender "esto bloquea la barra entera". Misma
+        flecha en la versión abierta y cerrada de este candado — indica
+        SIEMPRE lo mismo, cambia solo el estado (shackle abierto/cerrado).
+    -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.5"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:fillColor="#00000000"
+        android:pathData="M21,9.2 V3.1" />
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.5"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:fillColor="#00000000"
+        android:pathData="M18.6,5.5 L21,3.1 L23.4,5.5" />
+</vector>
