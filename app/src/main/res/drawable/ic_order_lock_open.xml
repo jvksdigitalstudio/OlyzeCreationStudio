@@ -1,0 +1,49 @@
+<!--
+    Candado de ORDEN — versión DESBLOQUEADA (inactivo). Mismo cuerpo
+    triangular puro que ic_order_lock_closed; el único cambio es el
+    arco/gancho, que acá se ve ABIERTO (desplazado hacia un costado, sin
+    cerrar el lazo) — igual convención que ic_lock_open respecto a
+    ic_lock_closed. Mismo ajuste de espaciado que ic_order_lock_closed
+    (candado bajado 2.4 unidades para no tocar la flecha de arriba).
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.7"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:fillColor="#00000000"
+        android:pathData="M8.3,12.7 V10.0 a3.7,3.7 0 0 1 7.1,-1.2" />
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.7"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:fillColor="#00000000"
+        android:pathData="M7,12.7 L17,12.7 L12,22.0 Z" />
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.4"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:fillColor="#00000000"
+        android:pathData="M7.2,3.3 H16.8" />
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.4"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:fillColor="#00000000"
+        android:pathData="M9.4,1.5 L7.2,3.3 L9.4,5.1" />
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.4"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:fillColor="#00000000"
+        android:pathData="M14.6,1.5 L16.8,3.3 L14.6,5.1" />
+</vector>
