@@ -1,0 +1,11 @@
+<resources>
+    <!-- Nombre completo oficial: se usa en Ajustes > Apps, notificaciones,
+         hoja de "Compartir", menú interno, etc. -->
+    <string name="app_name">Olyze Creation Studio</string>
+    <!-- Nombre corto oficial ("Olyze CS") para el ícono del launcher y
+         demás superficies de espacio limitado, según la identidad oficial
+         de Olyze Creation Studio (ver PROJECT_IDENTITY_AND_NAMING_SPEC.md).
+         Reemplaza la decisión anterior de usar el nombre completo también
+         acá. -->
+    <string name="app_name_launcher">Olyze CS</string>
+</resources>

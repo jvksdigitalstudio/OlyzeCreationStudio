@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-feature android:name="android.hardware.opengles.aep" android:required="false" />
+
+    <!-- A PEDIDO EXPLÍCITO DEL USUARIO: vibración real (no la sutil de
+         `LocalHapticFeedback`, pensada para acuses de clic de UI) al
+         arrastrar un ícono minimizado sobre la zona de "Eliminar" — ver
+         [FloatingToolWindow] en EditorScreen.kt. Permiso "normal" (no
+         peligroso): con declararlo acá alcanza, no hace falta pedirlo
+         en tiempo de ejecución. -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <application
+        android:name=".OlyzeApp"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Olyze"
+        android:hardwareAccelerated="true"
+        android:largeHeap="true">
+
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name_launcher"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask"
+            android:configChanges="orientation|screenSize|keyboardHidden">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <!-- Compartir: recibir un proyecto ".olycs" que otra persona (o
+                 uno mismo, desde otro dispositivo) mandó por WhatsApp,
+                 Telegram, Drive, correo, Bluetooth, etc. y se abre
+                 tocándolo directamente (típicamente dispara ACTION_VIEW con
+                 el mime type detectado). -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="content" android:mimeType="application/x-olycs" />
+            </intent-filter>
+
+            <!-- Mismo caso, pero cuando el archivo llega con un mime type
+                 genérico (application/octet-stream — muy común al bajar
+                 adjuntos de apps de mensajería) y solo se puede reconocer
+                 por su extensión ".olycs". -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="content" />
+                <data android:scheme="file" />
+                <data android:pathPattern=".*\\.olycs" />
+                <data android:mimeType="*/*" />
+            </intent-filter>
+
+            <!-- Recibir el archivo desde la hoja "Compartir" nativa de
+                 OTRA app (p. ej. reenviado desde el visor de adjuntos de
+                 Gmail o Telegram usando su propio botón "Compartir"). -->
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="application/x-olycs" />
+            </intent-filter>
+        </activity>
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+    </application>
+</manifest>
