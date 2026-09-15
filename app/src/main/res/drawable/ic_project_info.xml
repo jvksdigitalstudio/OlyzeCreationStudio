@@ -1,0 +1,53 @@
+<!--
+    Ícono "Información del proyecto" — libreta/formulario, referencia del
+    usuario: tablero con pestaña arriba y líneas de texto adentro (título,
+    sinopsis, créditos...). Mismo estilo "solo trazo" que ic_grid.xml, su
+    vecino en la barra de arriba, para que ambos se vean como parte del
+    mismo grupo de íconos.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Tablero -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.5"
+        android:strokeLineJoin="round"
+        android:fillColor="#00000000"
+        android:pathData="M6,4 h12 a2,2 0 0 1 2,2 v13 a2,2 0 0 1 -2,2 h-12 a2,2 0 0 1 -2,-2 v-13 a2,2 0 0 1 2,-2 Z" />
+    <!-- Pestaña/clip de arriba -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.5"
+        android:strokeLineJoin="round"
+        android:fillColor="#00000000"
+        android:pathData="M10,2.4 h4 a1.1,1.1 0 0 1 1.1,1.1 v1 a1.1,1.1 0 0 1 -1.1,1.1 h-4 a1.1,1.1 0 0 1 -1.1,-1.1 v-1 a1.1,1.1 0 0 1 1.1,-1.1 Z" />
+    <!-- Líneas de texto: título, sinopsis, créditos... la última más
+         corta, como el final natural de un párrafo. -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.3"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000"
+        android:pathData="M7.2,9.1 H16.8" />
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.3"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000"
+        android:pathData="M7.2,12.3 H16.8" />
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.3"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000"
+        android:pathData="M7.2,15.5 H16.8" />
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.3"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000"
+        android:pathData="M7.2,18.7 H13.5" />
+</vector>
