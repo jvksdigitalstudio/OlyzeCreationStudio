@@ -1,0 +1,65 @@
+<!--
+    Candado de ORDEN — versión BLOQUEADA (activo). A propósito con una
+    silueta TOTALMENTE distinta al candado de canvas (ic_lock_closed, que
+    es un rectángulo redondeado con ojo de cerradura): acá el cuerpo es un
+    TRIÁNGULO puro, solo contorno (sin relleno, sin ojo de cerradura, sin
+    ningún dibujo decorativo adentro) — para que la diferencia se note de
+    un vistazo incluso en miniatura, que era justo el problema de la
+    versión anterior (mismo rectángulo redondeado para los dos candados,
+    solo cambiaba un detalle chico adentro).
+    Estado ACTIVO = arco/gancho CERRADO, formando un solo lazo con el
+    triángulo (igual convención que cualquier candado: cerrado = bloqueado).
+    Arriba lleva una flecha doble horizontal (← →) — pedido puntual del
+    usuario, ver referencia: da a entender "esto bloquea TODA la barra de
+    esa capa" (a lo ancho, la fila completa), a diferencia de la flecha
+    vertical del candado de canvas (ic_lock_*), que apunta hacia arriba
+    dando a entender "esto bloquea solo hacia el canvas". Misma flecha en
+    la versión abierta y cerrada — indica SIEMPRE lo mismo, cambia solo el
+    estado (shackle abierto/cerrado).
+    BUG REAL corregido: la primera versión de esta flecha terminaba en
+    y=5.1 mientras que la punta del gancho arrancaba en y≈3.9 — se
+    superponían/tocaban en vez de quedar separadas. Se corrige bajando el
+    candado entero (gancho + triángulo) 2.4 unidades, dejando un espacio
+    real entre la flecha y la punta del gancho, en vez de tocarse.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.7"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:fillColor="#00000000"
+        android:pathData="M8.3,12.7 V10.0 a3.7,3.7 0 0 1 7.4,0 v2.7" />
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.7"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:fillColor="#00000000"
+        android:pathData="M7,12.7 L17,12.7 L12,22.0 Z" />
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.4"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:fillColor="#00000000"
+        android:pathData="M7.2,3.3 H16.8" />
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.4"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:fillColor="#00000000"
+        android:pathData="M9.4,1.5 L7.2,3.3 L9.4,5.1" />
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.4"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:fillColor="#00000000"
+        android:pathData="M14.6,1.5 L16.8,3.3 L14.6,5.1" />
+</vector>
