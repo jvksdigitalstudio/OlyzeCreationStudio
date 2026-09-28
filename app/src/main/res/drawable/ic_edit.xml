@@ -1,0 +1,14 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="386.375"
+    android:viewportHeight="386.375">
+    <!-- Lápiz premium: mismo path exacto del SVG provisto por el usuario
+         (viruta/papel en la punta + cuerpo + capuchón redondeado con
+         curvas Bézier), relleno sólido en vez del lápiz de solo trazo que
+         había antes. Viewport nativo del SVG (386.375x386.375) para no
+         reescalar las curvas a mano y arrastrar redondeos. -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M21.05,286.875 L97.55,363.375 L95.65,367.175 L0.05,386.375 L19.15,290.775 Z M34.65,272.775 L111.75,349.875 L328.15,133.476 L251.049,56.376 Z M374.85,34.375 L351.85,11.475 C336.55,-3.825 313.651,-3.825 298.35,11.475 L265.85,43.975 L342.35,120.475 L374.85,87.975 C390.15,72.675 390.15,49.775 374.85,34.475 Z" />
+</vector>

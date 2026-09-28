@@ -1,0 +1,17 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!--
+        Ícono premium "Módulos de capa" (mdi-view-module, entregado por el
+        usuario) — pathData tomado tal cual del SVG (viewBox 0 0 24 24).
+        fillColor blanco a propósito (mismo criterio que ic_modules_menu.xml/
+        ic_close.xml): el tinte real se aplica en runtime vía el
+        parámetro `tint` de `Icon(...)`, así este recurso sirve para
+        cualquier color de marca sin duplicar el XML.
+    -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M16,5V11H21V5M10,11H15V5H10M16,18H21V12H16M10,18H15V12H10M4,18H9V12H4M4,11H9V5H4V11Z" />
+</vector>
