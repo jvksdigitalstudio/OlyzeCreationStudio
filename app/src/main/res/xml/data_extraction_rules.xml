@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Reglas de Auto Backup y transferencia entre dispositivos (Android ≥ 12,
+    `android:dataExtractionRules`). Ver backup_rules.xml para el criterio.
+
+    - Copia en la nube: solo preferencias (la cuota de 25 MB no admite proyectos).
+    - Transferencia directa entre dispositivos (sin cuota): se llevan también los proyectos y
+      las imágenes editadas; NUNCA el registro de errores, la papelera ni la caché.
+-->
+<data-extraction-rules>
+    <cloud-backup>
+        <include domain="sharedpref" path="." />
+        <exclude domain="file" path="." />
+        <exclude domain="cache" path="." />
+        <exclude domain="external" path="." />
+    </cloud-backup>
+    <device-transfer>
+        <include domain="sharedpref" path="." />
+        <include domain="file" path="projects" />
+        <include domain="file" path="edited_images" />
+        <exclude domain="file" path="olyze_registro_errores.log" />
+        <exclude domain="file" path="projects_trash" />
+        <exclude domain="cache" path="." />
+        <exclude domain="external" path="." />
+    </device-transfer>
+</data-extraction-rules>

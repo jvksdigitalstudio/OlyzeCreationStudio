@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Reglas de Auto Backup (Android ≤ 11, `android:fullBackupContent`).
+
+    SEGURIDAD / PRIVACIDAD: antes `allowBackup="true"` sin reglas respaldaba TODO el
+    almacenamiento privado, incluido el registro de errores (rutas, Uri y nombres de
+    archivos del usuario) y la papelera. Ahora se respalda únicamente lo que tiene sentido
+    restaurar y cabe en la cuota de Auto Backup (25 MB): las preferencias del usuario.
+    Los proyectos (imágenes/audio, potencialmente cientos de MB) se respaldan con la
+    exportación `.olycs`, no con Auto Backup, que los descartaría por tamaño de todos modos.
+-->
+<full-backup-content>
+    <include domain="sharedpref" path="." />
+    <exclude domain="file" path="." />
+    <exclude domain="cache" path="." />
+    <exclude domain="external" path="." />
+</full-backup-content>

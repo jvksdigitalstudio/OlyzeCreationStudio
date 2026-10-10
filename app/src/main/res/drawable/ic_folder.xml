@@ -1,0 +1,20 @@
+<!--
+    Ícono de carpeta para las filas de subcarpeta del navegador de la
+    papelera de proyectos (ProjectsTrashScreen.kt) — mismo estilo de
+    trazo monocromático (stroke, sin relleno) que el resto del set de
+    íconos de la app (ver ic_delete.xml, ic_image_placeholder.xml):
+    se tiñe con `tint` en el sitio de uso, nunca a color fijo.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.6"
+        android:strokeLineJoin="round"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000"
+        android:pathData="M3.5,6.5 h6 l2,2.2 h8.5 v10.3 a1,1 0 0 1 -1,1 h-14.5 a1,1 0 0 1 -1,-1 v-11.5 a1,1 0 0 1 1,-1 Z" />
+</vector>

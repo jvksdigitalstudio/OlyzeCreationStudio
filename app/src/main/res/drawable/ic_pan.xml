@@ -1,0 +1,11 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Ícono "balance/pan": flecha doble horizontal (izquierda ↔ derecha)
+         sobre un punto central — mismo lenguaje visual que ic_volume. -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M8,7l-5,5l5,5v-3.5h8V17l5,-5l-5,-5v3.5H8V7z" />
+</vector>
