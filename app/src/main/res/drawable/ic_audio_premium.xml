@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Ícono premium de la pista de audio (esquina izquierda de su fila).
+
+  Conversión fiel del SVG original (viewBox 0 0 512 512): mismos trazos
+  (#3B3A3E, ancho 20, extremos y uniones redondeados, miter 10) y mismo
+  relleno de las dos cabezas de nota (#65A0D6), en el mismo orden de
+  dibujo que el SVG: cabeza 1, arco (polyline), cabeza 2, viga (línea).
+  Se omite el primer juego de círculos/polyline "sin relleno" del SVG
+  original: es una copia exacta del juego de abajo y queda 100% tapado.
+
+  El viewBox se recorta al contenido real (el original dejaba ~110px de
+  margen vacío por lado, así que en 28dp el dibujo se veía diminuto): el
+  contenido ocupa x 114..398, y 112..400 (incluido el grosor del trazo);
+  el `group` traslada (-112,-112) y el viewport pasa a 288x288.
+
+  SIN tinte a propósito: se usa con `tint = Color.Unspecified` para
+  conservar sus colores propios (mismo criterio que `ic_layer_color`).
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="288dp"
+    android:height="288dp"
+    android:viewportWidth="288"
+    android:viewportHeight="288">
+    <group
+        android:translateX="-112"
+        android:translateY="-112">
+        <!-- Cabeza de nota 1 (abajo-izquierda) -->
+        <path
+            android:fillColor="#65A0D6"
+            android:pathData="M123.957,353.741 a35.509,35.509 0 1,0 71.018,0 a35.509,35.509 0 1,0 -71.018,0 Z"
+            android:strokeColor="#3B3A3E"
+            android:strokeWidth="20"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round"
+            android:strokeMiterLimit="10" />
+        <!-- Plica + arco superior + plica derecha -->
+        <path
+            android:pathData="M194.975,353.741 L194.975,184.25 L388.043,122.75 L388.043,292.241"
+            android:strokeColor="#3B3A3E"
+            android:strokeWidth="20"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round"
+            android:strokeMiterLimit="10" />
+        <!-- Cabeza de nota 2 (derecha) -->
+        <path
+            android:fillColor="#65A0D6"
+            android:pathData="M317.025,292.241 a35.509,35.509 0 1,0 71.018,0 a35.509,35.509 0 1,0 -71.018,0 Z"
+            android:strokeColor="#3B3A3E"
+            android:strokeWidth="20"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round"
+            android:strokeMiterLimit="10" />
+        <!-- Viga interior -->
+        <path
+            android:pathData="M194.975,221.917 L388.043,157.251"
+            android:strokeColor="#3B3A3E"
+            android:strokeWidth="20"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round"
+            android:strokeMiterLimit="10" />
+    </group>
+</vector>

@@ -1,0 +1,10 @@
+<resources>
+    <!-- Audio clip detail window header (AudioClipDetailHeader.kt). Same keys as values/strings.xml. -->
+    <string name="audio_detail_load">Load</string>
+    <string name="audio_detail_reverse">Reverse</string>
+    <string name="audio_detail_repeat">Repeat</string>
+    <string name="audio_detail_load_desc">Load or replace this clip\'s audio</string>
+    <string name="audio_detail_reverse_desc">Reverse clip</string>
+    <string name="audio_detail_repeat_desc">Repeat clip preview</string>
+    <string name="audio_detail_close_desc">Close audio window</string>
+</resources>

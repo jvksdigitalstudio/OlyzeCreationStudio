@@ -1,0 +1,21 @@
+<resources>
+    <!-- Nombre completo oficial: se usa en Ajustes > Apps, notificaciones,
+         hoja de "Compartir", menú interno, etc. Marca: no se traduce. -->
+    <string name="app_name" translatable="false">Olyze Creation Studio</string>
+    <!-- Nombre corto oficial ("Olyze CS") para el ícono del launcher y
+         demás superficies de espacio limitado, según la identidad oficial
+         de Olyze Creation Studio (ver PROJECT_IDENTITY_AND_NAMING_SPEC.md).
+         Marca: no se traduce. -->
+    <string name="app_name_launcher" translatable="false">Olyze CS</string>
+
+    <!-- Cabecera de la ventana ampliada del audio (AudioClipDetailHeader.kt).
+         Idioma por defecto: español. Cada idioma nuevo agrega su carpeta values-<código>
+         con las MISMAS claves; así la pantalla nunca mezcla idiomas. -->
+    <string name="audio_detail_load">Cargar</string>
+    <string name="audio_detail_reverse">Reversa</string>
+    <string name="audio_detail_repeat">Repetir</string>
+    <string name="audio_detail_load_desc">Cargar o cambiar el audio de este clip</string>
+    <string name="audio_detail_reverse_desc">Reversa del clip</string>
+    <string name="audio_detail_repeat_desc">Repetir la vista previa del clip</string>
+    <string name="audio_detail_close_desc">Cerrar ventana del audio</string>
+</resources>

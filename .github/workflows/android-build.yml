@@ -1,0 +1,108 @@
+name: Android CI Build
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+# Se ENCOLA en vez de cancelar: cancelar a mitad de la escritura de la
+# caché de Gradle dejaba entradas corruptas (bug "Premature end of file").
+# SEGURIDAD (mínimo privilegio): sin este bloque el GITHUB_TOKEN hereda los permisos por
+# defecto del repositorio (puede ser lectura+escritura sobre contenido, PRs, etc.). Este
+# workflow solo hace checkout y sube artifacts, así que le alcanza con leer el contenido.
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    # Imagen fija: evita la migración de ubuntu-latest (19-oct-2026).
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      # El repo no incluye gradle-wrapper.jar; esta action instala Gradle
+      # 8.6 y cachea distribución y dependencias entre corridas.
+      - name: Configurar Gradle 8.6
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: '8.6'
+          cache-read-only: ${{ github.ref != 'refs/heads/main' }}
+
+      # El runner ya trae platform 34 y build-tools 34.0.0. Solo se
+      # instala si falta algo (evita ~1 min de descargas y licencias).
+      - name: Configurar Android SDK
+        run: |
+          SDK_ROOT="${ANDROID_SDK_ROOT:-$ANDROID_HOME}"
+          if [ -d "$SDK_ROOT/platforms/android-34" ] \
+             && [ -d "$SDK_ROOT/build-tools/34.0.0" ] \
+             && [ -d "$SDK_ROOT/platform-tools" ]; then
+            echo "Android SDK 34 ya preinstalado en el runner. Se omite la instalación."
+            exit 0
+          fi
+          SDKMANAGER="$(find "$SDK_ROOT/cmdline-tools" -maxdepth 3 -type f -name sdkmanager 2>/dev/null | sort -V | tail -n1)"
+          if [ -z "$SDKMANAGER" ]; then
+            echo "::error::No se encontró sdkmanager bajo '$SDK_ROOT/cmdline-tools'."
+            exit 1
+          fi
+          yes | "$SDKMANAGER" --licenses > /dev/null || true
+          "$SDKMANAGER" --install "platform-tools" "platforms;android-34" "build-tools;34.0.0"
+
+      # Una sola invocación de Gradle: tests + APK comparten arranque,
+      # configuración y daemon. Si los tests fallan, no se genera el APK.
+      #
+      # Maven Central y el Gradle Plugin Portal limitan por IP (HTTP 429 "Too
+      # Many Requests") a los runners compartidos de GitHub: es una falla
+      # TRANSITORIA de red al bajar dependencias (p. ej. kotlin-stdlib para
+      # :buildSrc), no del código. Solo se reintenta, con espera creciente,
+      # ante ESE tipo de error; un fallo real de compilación o de tests falla
+      # de inmediato, sin repetir el trabajo.
+      - name: Tests unitarios y compilar APK Debug
+        shell: bash
+        run: |
+          set -o pipefail
+          max_attempts=3
+          for attempt in $(seq 1 "$max_attempts"); do
+            if gradle testDebugUnitTest assembleDebug --stacktrace 2>&1 | tee gradle-run.log; then
+              exit 0
+            fi
+            if [ "$attempt" -lt "$max_attempts" ] \
+               && grep -qE "Received status code 429|Too Many Requests|Could not GET|Could not HEAD" gradle-run.log; then
+              delay=$((60 * attempt))
+              echo "::warning::Fallo transitorio de red al resolver dependencias (intento $attempt de $max_attempts). Reintentando en ${delay}s..."
+              sleep "$delay"
+            else
+              exit 1
+            fi
+          done
+          exit 1
+
+      - name: Subir APKs como artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: olyze-debug-apks
+          path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Subir reporte de tests (solo si falló algo)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports
+          path: app/build/reports/tests
+          retention-days: 14

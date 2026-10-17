@@ -1,0 +1,23 @@
+<!--
+    Checkmark simple de un solo trazo — indicador de "seleccionado" para
+    tarjetas/opciones (ver FormatPresetCard en ProjectsScreen.kt,
+    auditoría del selector de "Formato del lienzo"). Deliberadamente
+    NO es ic_select_all_checks: ese ícono tiene 3 tildes en cascada y
+    comunica "se marcan varias a la vez", que es una idea distinta a
+    "esta única tarjeta está elegida". Mismo lenguaje visual que el
+    resto de los íconos de la app: solo trazo, sin relleno, tintado por
+    quien lo usa.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2.6"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:fillColor="#00000000"
+        android:pathData="M4.5,12.5 L9.3,17.3 L19.5,6.3" />
+</vector>

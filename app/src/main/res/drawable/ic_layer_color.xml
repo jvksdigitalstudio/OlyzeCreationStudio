@@ -1,0 +1,26 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!--
+        Paleta de pintor con sus propios colores fijos (igual criterio que
+        ic_eye_off: se usa con tint = Color.Unspecified desde RowActionIcon
+        para que estos colores SE VEAN siempre, sin que un tint plano los
+        tape) — así el ícono mismo ya comunica "esto cambia el color de la
+        capa", sin depender de texto.
+    -->
+    <!-- Cuerpo de la paleta -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M12,3.2 C6.9,3.2 2.8,6.9 2.8,11.5 C2.8,14.6 5.3,16.4 7.7,16.1 C8.5,16 9.2,16.6 9.2,17.4 C9.2,17.9 9,18.3 8.9,18.7 C8.7,19.5 9.3,20.3 10.2,20.3 C16.2,20.3 21.2,16.3 21.2,11.5 C21.2,6.9 17.1,3.2 12,3.2 Z" />
+    <!-- Hueco del pulgar -->
+    <path
+        android:fillColor="#1E0F45"
+        android:pathData="M6.3,12.6 m-1.7,0 a1.7,1.7 0 1 0 3.4,0 a1.7,1.7 0 1 0 -3.4,0 Z" />
+    <!-- Manchas de color -->
+    <path android:fillColor="#D1449A" android:pathData="M9.6,7.6 m-1.55,0 a1.55,1.55 0 1 0 3.1,0 a1.55,1.55 0 1 0 -3.1,0 Z" />
+    <path android:fillColor="#E08A3C" android:pathData="M15,6.9 m-1.55,0 a1.55,1.55 0 1 0 3.1,0 a1.55,1.55 0 1 0 -3.1,0 Z" />
+    <path android:fillColor="#4C7FD6" android:pathData="M18.7,10.6 m-1.55,0 a1.55,1.55 0 1 0 3.1,0 a1.55,1.55 0 1 0 -3.1,0 Z" />
+    <path android:fillColor="#4CAF6D" android:pathData="M17,15 m-1.55,0 a1.55,1.55 0 1 0 3.1,0 a1.55,1.55 0 1 0 -3.1,0 Z" />
+</vector>
