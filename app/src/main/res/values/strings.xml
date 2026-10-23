@@ -1,0 +1,53 @@
+<resources>
+    <!-- Nombre completo oficial: se usa en Ajustes > Apps, notificaciones,
+         hoja de "Compartir", menú interno, etc. Marca: no se traduce. -->
+    <string name="app_name" translatable="false">Olyze Creation Studio</string>
+    <!-- Nombre corto oficial ("Olyze CS") para el ícono del launcher y
+         demás superficies de espacio limitado, según la identidad oficial
+         de Olyze Creation Studio (ver PROJECT_IDENTITY_AND_NAMING_SPEC.md).
+         Marca: no se traduce. -->
+    <string name="app_name_launcher" translatable="false">Olyze CS</string>
+
+    <!-- Cabecera de la ventana ampliada del audio (AudioClipDetailHeader.kt).
+         Idioma por defecto: español. Cada idioma nuevo agrega su carpeta values-<código>
+         con las MISMAS claves; así la pantalla nunca mezcla idiomas. -->
+    <string name="audio_detail_replace">Reemplazar</string>
+    <string name="audio_detail_trim">Recorte</string>
+    <string name="audio_detail_reverse">Reversa</string>
+    <string name="audio_detail_repeat">Repetir</string>
+    <string name="audio_detail_select">Seleccionar</string>
+    <string name="audio_detail_replace_desc">Reemplazar el audio de este clip por otro archivo</string>
+    <string name="audio_detail_trim_desc">Recortar el clip al rango seleccionado</string>
+    <string name="audio_detail_reverse_desc">Reversa del clip</string>
+    <string name="audio_detail_repeat_desc">Repetir la vista previa del clip</string>
+    <string name="audio_detail_select_count_desc">Hasta %1$d tramos seleccionables en el clip</string>
+    <string name="audio_detail_select_less_desc">Permitir un tramo menos</string>
+    <string name="audio_detail_select_more_desc">Permitir un tramo más</string>
+    <string name="audio_detail_close_desc">Cerrar ventana del audio</string>
+
+    <!-- Módulo "Reverb" de los carriles de audio (AudioModulesList.kt, ReverbFloatingWindow.kt, ReverbModulePanel.kt). -->
+    <string name="audio_module_category_space">Espacio</string>
+    <string name="reverb_title">Reverb</string>
+    <string name="reverb_active">Activo</string>
+    <string name="reverb_active_hint">Desactívalo para oír el audio sin efecto, sin perder los ajustes</string>
+    <string name="reverb_group_room">Sala</string>
+    <string name="reverb_group_tone">Tono</string>
+    <string name="reverb_group_texture">Textura</string>
+    <string name="reverb_mix">Mezcla</string>
+    <string name="reverb_decay">Decaimiento</string>
+    <string name="reverb_pre_delay">Pre-delay</string>
+    <string name="reverb_size">Tamaño</string>
+    <string name="reverb_damping">Amortiguación</string>
+    <string name="reverb_low_cut">Corte de graves</string>
+    <string name="reverb_high_cut">Corte de agudos</string>
+    <string name="reverb_diffusion">Difusión</string>
+    <string name="reverb_modulation">Modulación</string>
+    <string name="reverb_early">Reflexiones</string>
+    <string name="reverb_width">Ancho estéreo</string>
+    <string name="reverb_preset_room">Sala</string>
+    <string name="reverb_preset_chamber">Cámara</string>
+    <string name="reverb_preset_plate">Plate</string>
+    <string name="reverb_preset_hall">Auditorio</string>
+    <string name="reverb_preset_cathedral">Catedral</string>
+    <string name="reverb_preset_vocal">Voz</string>
+</resources>

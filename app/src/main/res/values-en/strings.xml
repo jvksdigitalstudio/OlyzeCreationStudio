@@ -1,0 +1,42 @@
+<resources>
+    <!-- Audio clip detail window header (AudioClipDetailHeader.kt). Same keys as values/strings.xml. -->
+    <string name="audio_detail_replace">Replace</string>
+    <string name="audio_detail_trim">Trim</string>
+    <string name="audio_detail_reverse">Reverse</string>
+    <string name="audio_detail_repeat">Repeat</string>
+    <string name="audio_detail_select">Select</string>
+    <string name="audio_detail_replace_desc">Replace this clip\'s audio with another file</string>
+    <string name="audio_detail_trim_desc">Trim clip to the selected range</string>
+    <string name="audio_detail_reverse_desc">Reverse clip</string>
+    <string name="audio_detail_repeat_desc">Repeat clip preview</string>
+    <string name="audio_detail_select_count_desc">Up to %1$d ranges selectable in the clip</string>
+    <string name="audio_detail_select_less_desc">Allow one range fewer</string>
+    <string name="audio_detail_select_more_desc">Allow one range more</string>
+    <string name="audio_detail_close_desc">Close audio window</string>
+
+    <!-- "Reverb" module of the audio tracks. Same keys as values/strings.xml. -->
+    <string name="audio_module_category_space">Space</string>
+    <string name="reverb_title">Reverb</string>
+    <string name="reverb_active">Active</string>
+    <string name="reverb_active_hint">Turn it off to hear the audio without the effect, keeping your settings</string>
+    <string name="reverb_group_room">Room</string>
+    <string name="reverb_group_tone">Tone</string>
+    <string name="reverb_group_texture">Texture</string>
+    <string name="reverb_mix">Mix</string>
+    <string name="reverb_decay">Decay</string>
+    <string name="reverb_pre_delay">Pre-delay</string>
+    <string name="reverb_size">Size</string>
+    <string name="reverb_damping">Damping</string>
+    <string name="reverb_low_cut">Low cut</string>
+    <string name="reverb_high_cut">High cut</string>
+    <string name="reverb_diffusion">Diffusion</string>
+    <string name="reverb_modulation">Modulation</string>
+    <string name="reverb_early">Early reflections</string>
+    <string name="reverb_width">Stereo width</string>
+    <string name="reverb_preset_room">Room</string>
+    <string name="reverb_preset_chamber">Chamber</string>
+    <string name="reverb_preset_plate">Plate</string>
+    <string name="reverb_preset_hall">Hall</string>
+    <string name="reverb_preset_cathedral">Cathedral</string>
+    <string name="reverb_preset_vocal">Vocal</string>
+</resources>
