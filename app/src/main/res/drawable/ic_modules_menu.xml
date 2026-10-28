@@ -1,0 +1,37 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="612"
+    android:viewportHeight="612">
+    <!--
+        BUG REAL corregido: el SVG original recorta las 3 barras como
+        "agujeros" dentro del cuadrado sólido (fill-rule evenodd sobre
+        un único path compuesto). La versión anterior las dibujaba como
+        4 paths separados del MISMO color blanco superpuestos entre sí
+        — sin agujero real, el resultado visual era un cuadrado sólido
+        (parecía un ícono de "stop"), las líneas quedaban invisibles
+        pintadas sobre sí mismas.
+
+        Arreglo: un solo <path> con las 4 subrutas (marco + 3 barras) y
+        android:fillType="evenOdd", igual que el SVG original — así las
+        barras SÍ perforan el relleno y se ven como negativo (hueco),
+        quedando el glifo real de "lista" (3 líneas claras sobre fondo
+        sólido).
+    -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillType="evenOdd"
+        android:pathData="
+            M535.5,0h-459C34.521,0,0,37.657,0,79.656v456.303
+            C0,577.957,34.023,612,76.003,612H532c41.979,0,80-34.502,80-76.5v-459
+            C612,34.501,577.479,0,535.5,0z
+            M459,420.75H153c-10.557,0-19.125-8.568-19.125-19.125
+            S142.443,382.5,153,382.5h306c10.557,0,19.125,8.568,19.125,19.125
+            S469.557,420.75,459,420.75z
+            M459,306H153c-10.557,0-19.125-8.568-19.125-19.125
+            S142.443,267.75,153,267.75h306c10.557,0,19.125,8.568,19.125,19.125
+            S469.557,306,459,306z
+            M459,191.25H153c-10.557,0-19.125-8.568-19.125-19.125
+            S142.443,153,153,153h306c10.557,0,19.125,8.568,19.125,19.125
+            S469.557,191.25,459,191.25z" />
+</vector>

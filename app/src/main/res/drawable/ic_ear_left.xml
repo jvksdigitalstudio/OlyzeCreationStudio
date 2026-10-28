@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Ícono "oído izquierdo" de los extremos del panorama en la barra flotante de la capa de audio.
+    Dibujo propio, anatómico y de trazo (viewBox 24 × 24, trazo 1,8 con extremos y uniones redondeados):
+    hélix exterior con lóbulo, antihélix interior y trago. Hélix hacia la IZQUIERDA y concha abierta hacia la DERECHA, es decir, hacia el centro de la barra.
+    El color base es blanco solo como punto de partida: la UI lo tiñe con `tint` (ver `StereoEar` en
+    `AudioTrackMixSliders`). Es el espejo exacto de su par (`ic_ear_right`), pero cada uno es
+    un recurso propio: nada se voltea en tiempo de ejecución, así la orientación es la del archivo y no depende del código.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:pathData="M15.4 10.4 C15.4 6.1 12.5 3 8.9 3 C5.5 3 3.2 5.6 3.2 9 C3.2 11.6 4.4 13.2 5.8 14.8 C7 16.2 7.8 17.2 8.2 18.6 C8.7 20.4 10.1 21.5 11.8 21.5 C13.2 21.5 14.3 20.8 15 19.7"
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="1.8"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+    <path
+        android:pathData="M11.6 11.2 C12 8.9 10.7 7.1 8.9 7.1 C7.2 7.1 6.3 8.4 6.6 9.9 C6.9 11.4 8.1 12.1 8.6 13.0 C8.9 13.5 8.9 14.0 8.7 14.4"
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="1.8"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+    <path
+        android:pathData="M12.9 15.6 C12.2 16.5 11.1 16.8 10.1 16.4"
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="1.8"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+</vector>

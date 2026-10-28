@@ -1,0 +1,7 @@
+<resources>
+    <style name="Theme.Olyze" parent="android:Theme.Material.NoActionBar">
+        <item name="android:statusBarColor">@color/brand_purple_deep</item>
+        <item name="android:navigationBarColor">@color/brand_purple_deep</item>
+        <item name="android:windowBackground">@color/brand_purple_deep</item>
+    </style>
+</resources>
