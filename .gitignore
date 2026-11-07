@@ -1,0 +1,18 @@
+*.iml
+.gradle/
+/local.properties
+.idea/
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+*.apk
+*.ap_
+*.dex
+/app/build/
+
+# Binarios de las pruebas nativas del host
+app/src/test/cpp/engine_tests
+app/src/test/cpp/engine_tests_asan
+app/src/test/cpp/engine_tests_tsan

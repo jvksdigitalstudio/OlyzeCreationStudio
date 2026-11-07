@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="500"
+    android:viewportHeight="500">
+    <!-- DESHACER · flecha de retroceso (apunta a la izquierda), rojo.
+         Geometría: diseño original de dos tonos (cara superior clara + cara inferior oscura = efecto de cinta
+         doblada), viewport 500×500, figura centrada (x 30–470, y 19–481). Color fijo: se pinta con
+         tint = Color.Unspecified (un tinte lo anularía). -->
+    <path
+        android:fillType="evenOdd"
+        android:pathData="M275 471c0,5 4,10 11,10 103,0 184,-89 184,-191 0,-103 -83,-186 -186,-186l-77 0 0 -60c0,-26 -30,-33 -51,-13l-113 114c-9,8 -13,17 -13,25l259 0c82,0 149,67 149,149 0,82 -65,152 -147,152 -2,0 -8,0 -16,0z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:type="linear"
+                android:startX="250" android:startY="19"
+                android:endX="250" android:endY="481">
+                <item android:offset="0" android:color="#FF7F86" />
+                <item android:offset="1" android:color="#FF3B48" />
+            </gradient>
+        </aapt:attr>
+    </path>
+    <path
+        android:fillType="evenOdd"
+        android:pathData="M286 461c-7,0 -11,5 -11,10 8,0 14,0 16,0 82,0 147,-70 147,-152 0,-82 -67,-149 -149,-149l-259 0 0 0c0,8 4,17 13,25l113 114c21,20 51,13 51,-13l0 -60 77 0c64,0 115,52 115,116 0,63 -49,109 -113,109z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:type="linear"
+                android:startX="250" android:startY="170"
+                android:endX="250" android:endY="471">
+                <item android:offset="0" android:color="#EE2A3B" />
+                <item android:offset="1" android:color="#B30E22" />
+            </gradient>
+        </aapt:attr>
+    </path>
+</vector>

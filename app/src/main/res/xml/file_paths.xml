@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <external-files-path name="exports" path="exports/" />
+    <!-- Foto temporal de "Elige un fondo" → cámara (ver BackgroundPickerSection.kt
+         / MainActivity.takeBackgroundPhotoLauncher): TakePicture necesita un
+         Uri de content:// entregado ANTES de disparar la cámara, no uno que
+         se genere después con el resultado — por eso va a cache/, no a
+         filesDir/edited_images/ (ese es el destino FINAL una vez que
+         LayerRepository decodifica la foto y la copia, ver
+         LayerRepository.saveBitmapAsLocalUri). -->
+    <cache-path name="camera_captures" path="camera_captures/" />
+</paths>
