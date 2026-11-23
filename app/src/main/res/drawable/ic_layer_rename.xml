@@ -1,0 +1,35 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!--
+        Lápiz "premium": a diferencia del ic_edit.xml genérico (solo
+        contorno), este trae el cuerpo del lápiz relleno — se lee más
+        sólido/definido a los 15dp diminutos con los que se dibuja dentro
+        del panel de acciones de la fila (RowActionIcon), donde un ícono
+        de puro contorno tiende a perder nitidez.
+    -->
+    <!-- Cuerpo del lápiz (relleno) -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M14.4,4.3 L19.7,9.6 L9.9,19.4 L4.6,19.4 L4.6,14.1 Z" />
+    <!-- Punta afilada (triángulo oscuro sobre el relleno, da profundidad) -->
+    <path
+        android:fillColor="#1C1C1E"
+        android:fillAlpha="0.28"
+        android:pathData="M4.6,14.1 L7.6,17.1 L4.6,19.4 Z" />
+    <!-- Franja de la goma / tope del lápiz -->
+    <path
+        android:fillColor="#1C1C1E"
+        android:fillAlpha="0.22"
+        android:pathData="M14.4,4.3 L16.5,6.4 L15.15,7.75 L13.05,5.65 Z" />
+    <!-- Línea de brillo diagonal sobre el cuerpo, para lectura "premium" -->
+    <path
+        android:strokeColor="#1C1C1E"
+        android:strokeWidth="0.9"
+        android:strokeLineCap="round"
+        android:strokeAlpha="0.18"
+        android:fillColor="#00000000"
+        android:pathData="M15.7,6.9 L9.4,13.2" />
+</vector>

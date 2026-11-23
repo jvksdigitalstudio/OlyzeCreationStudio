@@ -1,0 +1,18 @@
+# Reglas de estilo del proyecto. Las lee ktlint (CI) y Android Studio. Documentación: docs/QUALITY_GATES.md
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.{kt,kts}]
+indent_style = space
+indent_size = 4
+# Convenciones de Android/Compose. El código existente está en ktlint-baseline.xml: ktlint solo bloquea los hallazgos NUEVOS.
+ktlint_code_style = android_studio
+# Medido sobre el código real: p99 = 125 columnas (máximo 322). 140 corta los excesos sin forzar reescrituras masivas.
+max_line_length = 140
+# Las funciones @Composable se nombran en PascalCase por convención de Compose.
+ktlint_function_naming_ignore_when_annotated_with = Composable

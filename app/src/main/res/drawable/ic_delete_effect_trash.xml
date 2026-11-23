@@ -1,0 +1,33 @@
+<!--
+    A PEDIDO EXPLÍCITO DEL USUARIO: ícono "premium" a todo color (no el
+    trazo blanco monocromático de ic_delete.xml, que ya se usa en otro
+    lado de la app) para la zona de "Eliminar" donde se suelta el ícono
+    ya minimizado de un efecto — ver [FloatingWindowDeleteDropZone] en
+    EditorScreen.kt. Traducción directa, path por path, del SVG que trajo
+    el usuario (viewBox 1024x1024) — mismos cinco colores/formas, sin
+    reinterpretar nada.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="1024"
+    android:viewportHeight="1024">
+    <path
+        android:fillColor="#FF3B30"
+        android:pathData="M154,260h568v700H154z" />
+    <path
+        android:fillColor="#030504"
+        android:pathData="M624.428,261.076v485.956c0,57.379 -46.737,103.894 -104.391,103.894h-362.56v107.246h566.815V261.076h-99.864z" />
+    <path
+        android:fillColor="#152B3C"
+        android:pathData="M320.5,870.07c-8.218,0 -14.5,-6.664 -14.5,-14.883V438.474c0,-8.218 6.282,-14.883 14.5,-14.883s14.5,6.664 14.5,14.883v416.713c0,8.219 -6.282,14.883 -14.5,14.883zM543.5,870.07c-8.218,0 -14.5,-6.664 -14.5,-14.883V438.474c0,-8.218 6.282,-14.883 14.5,-14.883s14.5,6.664 14.5,14.883v416.713c0,8.219 -6.282,14.883 -14.5,14.883z" />
+    <path
+        android:fillColor="#030504"
+        android:pathData="M721.185,345.717v-84.641H164.437z" />
+    <path
+        android:fillColor="#FF3B30"
+        android:pathData="M633.596,235.166l-228.054,-71.773 31.55,-99.3 228.055,71.773z" />
+    <path
+        android:fillColor="#FF3B30"
+        android:pathData="M847.401,324.783c-2.223,0 -4.475,-0.333 -6.706,-1.034L185.038,117.401c-11.765,-3.703 -18.298,-16.239 -14.592,-27.996 3.706,-11.766 16.241,-18.288 27.993,-14.595l655.656,206.346c11.766,3.703 18.298,16.239 14.592,27.996 -2.995,9.531 -11.795,15.631 -21.286,15.631z" />
+</vector>

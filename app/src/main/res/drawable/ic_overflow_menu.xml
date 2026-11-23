@@ -1,0 +1,26 @@
+<!--
+    Ícono "Más opciones" del visor de archivos (FilePreviewDialog.kt →
+    FilePreviewTopBar) — transcripción 1:1 del SVG premium entregado
+    explícitamente por el cliente (viewBox 16x16, 3 barras horizontales
+    de igual ancho y alto, separadas en tercios verticales iguales).
+    `fillColor` queda en negro sólido a propósito: `Icon(...)` lo
+    retiñe siempre vía su parámetro `tint` en el call site (mismo
+    criterio que el resto de los íconos "solo forma" de este proyecto,
+    ver ic_more_vert.xml/ic_share.xml), así que el color de acá nunca
+    se ve tal cual.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="16dp"
+    android:height="16dp"
+    android:viewportWidth="16"
+    android:viewportHeight="16">
+    <path
+        android:fillColor="#FF000000"
+        android:pathData="M0,1h16v3h-16v-3z" />
+    <path
+        android:fillColor="#FF000000"
+        android:pathData="M0,6h16v3h-16v-3z" />
+    <path
+        android:fillColor="#FF000000"
+        android:pathData="M0,11h16v3h-16v-3z" />
+</vector>

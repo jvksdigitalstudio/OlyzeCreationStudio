@@ -1,0 +1,13 @@
+<resources>
+    <!--
+        Paleta de marca de Olyze: degradado morado (dominante) -> azul.
+        La fuente de verdad para Compose está en
+        ui/theme/Theme.kt — estos valores XML son solo para lo que
+        Compose no puede pintar (status bar / nav bar / splash antes de
+        que cargue la UI) y deben mantenerse en sync con ese archivo.
+    -->
+    <color name="brand_purple_deep">#1E0F45</color>
+    <color name="brand_purple">#4B2A9E</color>
+    <color name="brand_blue">#2F5FE0</color>
+    <color name="ic_launcher_background">#1E0F45</color>
+</resources>

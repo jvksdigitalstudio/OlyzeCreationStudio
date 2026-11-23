@@ -1,0 +1,322 @@
+name: Android CI Build
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+# Se ENCOLA en vez de cancelar: cancelar a mitad de la escritura de la
+# caché de Gradle dejaba entradas corruptas (bug "Premature end of file").
+# SEGURIDAD (mínimo privilegio): sin este bloque el GITHUB_TOKEN hereda los permisos por
+# defecto del repositorio (puede ser lectura+escritura sobre contenido, PRs, etc.). Este
+# workflow solo hace checkout y sube artifacts, así que le alcanza con leer el contenido.
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    # Imagen fija: evita la migración de ubuntu-latest (19-oct-2026).
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+
+    steps:
+      - name: Checkout repositorio
+        uses: actions/checkout@v6
+
+      - name: Configurar JDK 17
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      # El repo no incluye gradle-wrapper.jar; esta action instala Gradle
+      # y cachea distribución y dependencias entre corridas. 8.13 es el mínimo
+      # que exige AGP 8.13 (y la versión de gradle-wrapper.properties: deben
+      # coincidir, o CI y el equipo de desarrollo compilarían con Gradle distintos).
+      - name: Configurar Gradle 8.13
+        uses: gradle/actions/setup-gradle@v5
+        with:
+          gradle-version: '8.13'
+          cache-read-only: ${{ github.ref != 'refs/heads/main' }}
+
+      # API 36 (Android 16): compileSdk/targetSdk 36 (Google Play lo exige desde el 31-ago-2026), build-tools 36.0.0 (el
+      # que usa AGP 8.13 por defecto) y NDK r28c (28.2.13676358): desde r28 el enlazador alinea a 16 KB todas las
+      # bibliotecas nativas, incluida libc++_shared.so. Solo se instala si falta algo (evita ~1 min de descargas).
+      - name: Configurar Android SDK y NDK
+        run: |
+          SDK_ROOT="${ANDROID_SDK_ROOT:-$ANDROID_HOME}"
+          if [ -d "$SDK_ROOT/platforms/android-36" ] \
+             && [ -d "$SDK_ROOT/build-tools/36.0.0" ] \
+             && [ -d "$SDK_ROOT/ndk/28.2.13676358" ] \
+             && [ -d "$SDK_ROOT/platform-tools" ]; then
+            echo "Android SDK 36 y NDK r28c ya preinstalados en el runner. Se omite la instalación."
+            exit 0
+          fi
+          SDKMANAGER="$(find "$SDK_ROOT/cmdline-tools" -maxdepth 3 -type f -name sdkmanager 2>/dev/null | sort -V | tail -n1)"
+          if [ -z "$SDKMANAGER" ]; then
+            echo "::error::No se encontró sdkmanager bajo '$SDK_ROOT/cmdline-tools'."
+            exit 1
+          fi
+          yes | "$SDKMANAGER" --licenses > /dev/null || true
+          "$SDKMANAGER" --install "platform-tools" "platforms;android-36" "build-tools;36.0.0" "ndk;28.2.13676358"
+
+      # Verificación estática, rápida y antes de todo lo demás: llaves/paréntesis del Kotlin, imports internos que apuntan a símbolos
+      # que existen, y que cada `external fun` del puente JNI tenga su función C++ con los mismos parámetros. No sustituye a compilar:
+      # atrapa los errores que más se cuelan al editar sin compilador y falla en segundos, no tras minutos de Gradle.
+      - name: Verificación estática de Kotlin y del puente JNI
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m pip install --quiet pygments
+          python3 tools/check_kotlin_static.py
+          python3 tools/check_jni_signatures.py
+
+      # Motor de audio nativo (EliNer): el núcleo C++ es portable y se prueba en el propio runner, ANTES de Gradle:
+      # paridad exacta con la exportación, transporte sin clics, tiempo real, y los sanitizadores (carreras de datos,
+      # memoria, comportamiento indefinido). Si algo falla aquí no se gasta tiempo en compilar el APK.
+      - name: Pruebas del motor de audio nativo (host + sanitizadores)
+        shell: bash
+        run: |
+          set -euo pipefail
+          make -C app/src/test/cpp test
+          OLYZE_TEST_QUICK=1 make -C app/src/test/cpp test-sanitizers
+
+      # CMake 3.22.1 (el que fija app/build.gradle.kts) para compilar la biblioteca nativa. Idempotente.
+      - name: Instalar CMake para el motor nativo
+        shell: bash
+        run: |
+          set -euo pipefail
+          SDK_ROOT="${ANDROID_SDK_ROOT:-$ANDROID_HOME}"
+          if [ -d "$SDK_ROOT/cmake/3.22.1" ]; then
+            echo "CMake 3.22.1 ya instalado."
+            exit 0
+          fi
+          SDKMANAGER="$(find "$SDK_ROOT/cmdline-tools" -maxdepth 3 -type f -name sdkmanager 2>/dev/null | sort -V | tail -n1)"
+          yes | "$SDKMANAGER" --licenses > /dev/null || true
+          "$SDKMANAGER" --install "cmake;3.22.1"
+
+      # Una sola invocación de Gradle: tests + APK comparten arranque,
+      # configuración y daemon. Si los tests fallan, no se genera el APK.
+      #
+      # Maven Central y el Gradle Plugin Portal limitan por IP (HTTP 429 "Too
+      # Many Requests") a los runners compartidos de GitHub: es una falla
+      # TRANSITORIA de red al bajar dependencias (p. ej. kotlin-stdlib para
+      # :buildSrc), no del código. Solo se reintenta, con espera creciente,
+      # ante ESE tipo de error; un fallo real de compilación o de tests falla
+      # de inmediato, sin repetir el trabajo.
+      - name: Tests unitarios y compilar APK Debug y Perf
+        shell: bash
+        run: |
+          set -o pipefail
+          max_attempts=3
+          for attempt in $(seq 1 "$max_attempts"); do
+            if gradle testDebugUnitTest assembleDebug assemblePerf --stacktrace 2>&1 | tee gradle-run.log; then
+              exit 0
+            fi
+            if [ "$attempt" -lt "$max_attempts" ] \
+               && grep -qE "Received status code 429|Too Many Requests|Could not GET|Could not HEAD" gradle-run.log; then
+              delay=$((60 * attempt))
+              echo "::warning::Fallo transitorio de red al resolver dependencias (intento $attempt de $max_attempts). Reintentando en ${delay}s..."
+              sleep "$delay"
+            else
+              exit 1
+            fi
+          done
+          exit 1
+
+      # Paridad del reverb nativo con el de Kotlin: StereoReverbGoldenTest (Gradle, paso anterior) escribe la salida del reverb
+      # original para una señal fija; aquí el port en C++ renderiza lo mismo y debe coincidir (desvío < 2e-5). Si falta el
+      # archivo, falla: una comparación que no se ejecuta no es una garantía.
+      - name: Paridad del reverb nativo con Kotlin
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -f app/build/native-golden/reverb_golden.f32 ]; then
+            echo "::error::Falta app/build/native-golden/reverb_golden.f32. Lo escribe StereoReverbGoldenTest durante testDebugUnitTest; si la tarea se restauró de la caché sin ejecutarse, el archivo no está declarado como salida en app/build.gradle.kts."
+            exit 1
+          fi
+          make -C app/src/test/cpp golden
+
+      # ---- RELEASE (R8 + reducción de recursos + firma) — BLOQUEANTE ------------------------------------------------------
+      # Antes este paso era informativo (continue-on-error) y el release nunca se validaba: un fallo del minificador (clase recortada,
+      # `-keep` insuficiente, método JNI renombrado) solo aparecía el día de publicar. Ahora rompe el CI.
+      # Firma: si el repositorio tiene el secreto OLYZE_KEYSTORE_BASE64 el release sale FIRMADO; sin él (PR de un fork, o repositorio aún
+      # sin configurar) sale sin firmar y se avisa. Política y alta de secretos: docs/RELEASE_ENGINEERING.md.
+      - name: Preparar firma de release
+        id: signing
+        shell: bash
+        env:
+          KEYSTORE_B64: ${{ secrets.OLYZE_KEYSTORE_BASE64 }}
+        run: |
+          set -euo pipefail
+          if [ -n "${KEYSTORE_B64:-}" ]; then
+            echo "$KEYSTORE_B64" | base64 -d > "$RUNNER_TEMP/olyze-release.jks"
+            echo "OLYZE_KEYSTORE_FILE=$RUNNER_TEMP/olyze-release.jks" >> "$GITHUB_ENV"
+            echo "signed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::warning::Sin secreto OLYZE_KEYSTORE_BASE64: el release se compila SIN FIRMAR."
+            echo "signed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      # Dos invocaciones a propósito: `assembleRelease` genera los APK por ABI (+ universal) y `bundleRelease` el AAB; con un bundle en
+      # la misma invocación los `splits` de ABI se desactivan (ver app/build.gradle.kts). El versionCode es el número de ejecución.
+      - name: Compilar release (APK + AAB, R8)
+        shell: bash
+        env:
+          OLYZE_KEYSTORE_PASSWORD: ${{ secrets.OLYZE_KEYSTORE_PASSWORD }}
+          OLYZE_KEY_ALIAS: ${{ secrets.OLYZE_KEY_ALIAS }}
+          OLYZE_KEY_PASSWORD: ${{ secrets.OLYZE_KEY_PASSWORD }}
+          OLYZE_REQUIRE_RELEASE_SIGNING: ${{ steps.signing.outputs.signed }}
+        run: |
+          set -euo pipefail
+          gradle assembleRelease --stacktrace -Polyze.versionCode=${{ github.run_number }}
+          gradle bundleRelease --stacktrace -Polyze.versionCode=${{ github.run_number }}
+
+      # El minificador no debe haber tocado el puente JNI y debe haber ofuscado de verdad (si no, volvieron los `-keep` amplios).
+      # Dos comprobaciones complementarias: mapping.txt (la CLASE del puente intacta, ningún método renombrado, ofuscación activa) y el
+      # DEX REAL del APK (los 17 métodos nativos existen con su nombre). R8 no lista en mapping.txt los miembros sin renombrar, por eso
+      # la existencia de los métodos se comprueba en el DEX y no en el mapping.
+      - name: Verificar release de R8 (puente JNI intacto)
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/check_release_mapping.py
+          python3 tools/check_release_dex.py
+
+      # Firma del APK (solo si hay claves) y alineación de 16 KB de las bibliotecas nativas (requisito de Google Play para 64 bits).
+      - name: Verificar firma y alineación de 16 KB del release
+        shell: bash
+        env:
+          SIGNED: ${{ steps.signing.outputs.signed }}
+        run: |
+          set -euo pipefail
+          SDK_ROOT="${ANDROID_SDK_ROOT:-$ANDROID_HOME}"
+          BT="$SDK_ROOT/build-tools/36.0.0"
+          shopt -s nullglob
+          apks=(app/build/outputs/apk/release/*.apk)
+          if [ "${#apks[@]}" -eq 0 ]; then echo "::error::assembleRelease no produjo APK"; exit 1; fi
+          for apk in "${apks[@]}"; do
+            echo "== $apk"
+            if [ "$SIGNED" = "true" ]; then
+              "$BT/apksigner" verify --verbose "$apk"
+            fi
+            "$BT/zipalign" -c -P 16 -v 4 "$apk" > /dev/null
+          done
+          test -f app/build/outputs/bundle/release/app-release.aab || { echo "::error::bundleRelease no produjo el AAB"; exit 1; }
+
+      # mapping.txt es IMPRESCINDIBLE para desofuscar los fallos de cada versión publicada: se conserva 90 días junto a los
+      # símbolos nativos. Sin él una traza del release es ilegible.
+      - name: Subir artefactos de release (mapping y símbolos nativos)
+        uses: actions/upload-artifact@v6
+        with:
+          name: olyze-release-diagnostics
+          path: |
+            app/build/outputs/mapping/release/mapping.txt
+            app/build/outputs/native-debug-symbols/release/native-debug-symbols.zip
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Subir APK y AAB de release
+        uses: actions/upload-artifact@v6
+        with:
+          name: olyze-release
+          path: |
+            app/build/outputs/apk/release/*.apk
+            app/build/outputs/bundle/release/*.aab
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Subir APKs como artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: olyze-debug-apks
+          path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
+          retention-days: 14
+
+      # APK de RENDIMIENTO (no debuggable): úsalo para juzgar fluidez de reproducción y reverb en el dispositivo; el
+      # Debug es más lento por naturaleza (ver `buildTypes.perf` en app/build.gradle.kts).
+      - name: Subir APKs de rendimiento como artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: olyze-perf-apks
+          path: app/build/outputs/apk/perf/*.apk
+          if-no-files-found: error
+          retention-days: 14
+
+      # ---- Android Lint — gate de NO REGRESIÓN (corre al final para no ocultar los pasos de release) -------------------------
+      # Con app/lint-baseline.xml presente solo fallan los problemas NUEVOS. Sin él, modo informativo: genera el baseline y el reporte HTML.
+      - name: Android Lint
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -f app/lint-baseline.xml ]; then
+            echo "Modo BLOQUEANTE: solo fallan los problemas NUEVOS respecto a app/lint-baseline.xml."
+            gradle lintDebug --stacktrace
+          else
+            echo "::warning::Falta app/lint-baseline.xml: Android Lint corre en modo INFORMATIVO y lo genera. Descarga el artefacto 'olyze-quality' y súbelo a app/lint-baseline.xml."
+            gradle lintDebug --stacktrace -Polyze.lintGenerateBaseline=true -Dlint.baselines.continue=true
+            mkdir -p quality
+            [ -f app/lint-baseline.xml ] && cp app/lint-baseline.xml quality/lint-baseline.xml || echo "lint no generó baseline (sin problemas)."
+          fi
+
+      # ---- Estilo (ktlint) — gate de NO REGRESIÓN (al FINAL a propósito: un fallo de estilo no debe ocultar el resultado de compilar,
+      #      probar y verificar el release; `!cancelled()` lo ejecuta aunque un paso anterior haya fallado) ---------------------------
+      # ktlint 1.8.0 (estable) por CLI, sin tocar las dependencias de Gradle: trae su propio compilador de Kotlin, así que no depende de
+      # la versión de Kotlin del proyecto (detekt sí: su rama estable 1.23 está compilada contra Kotlin 2.0 y la 2.x sigue en alfa).
+      # Reglas: .editorconfig. Con ktlint-baseline.xml presente, solo fallan las infracciones NUEVAS. Sin él, corre en modo informativo y
+      # GENERA el baseline como artefacto: súbelo a la raíz del repo y el siguiente CI será bloqueante. Ver docs/QUALITY_GATES.md.
+      - name: Estilo de Kotlin (ktlint)
+        if: ${{ !cancelled() }}
+        shell: bash
+        env:
+          KTLINT_VERSION: "1.8.0"
+          # Opcional: pega aquí el SHA-256 que imprime este paso para fijar el binario (cadena de suministro). Vacío = solo se imprime.
+          KTLINT_SHA256: ""
+        run: |
+          set -euo pipefail
+          mkdir -p quality
+          curl -sSfL --retry 5 --retry-delay 5 -o "$RUNNER_TEMP/ktlint" \
+            "https://github.com/pinterest/ktlint/releases/download/${KTLINT_VERSION}/ktlint"
+          chmod +x "$RUNNER_TEMP/ktlint"
+          actual="$(sha256sum "$RUNNER_TEMP/ktlint" | cut -d' ' -f1)"
+          echo "ktlint ${KTLINT_VERSION} sha256: ${actual}"
+          if [ -n "$KTLINT_SHA256" ] && [ "$KTLINT_SHA256" != "$actual" ]; then
+            echo "::error::El binario de ktlint no coincide con KTLINT_SHA256."; exit 1
+          fi
+          globs=(--relative "app/src/**/*.kt" "buildSrc/src/**/*.kt" "!**/build/**")
+          if [ -f ktlint-baseline.xml ]; then
+            echo "Modo BLOQUEANTE: solo fallan las infracciones NUEVAS respecto a ktlint-baseline.xml."
+            "$RUNNER_TEMP/ktlint" --baseline=ktlint-baseline.xml --reporter=plain "${globs[@]}"
+          else
+            echo "::warning::Falta ktlint-baseline.xml: ktlint corre en modo INFORMATIVO y lo genera. Descarga el artefacto 'olyze-quality' y súbelo a la raíz del repositorio."
+            "$RUNNER_TEMP/ktlint" --baseline=ktlint-baseline.xml --reporter=plain-summary "${globs[@]}" || true
+            [ -f ktlint-baseline.xml ] && cp ktlint-baseline.xml quality/ktlint-baseline.xml || echo "ktlint no generó baseline (sin infracciones)."
+          fi
+
+      # Reportes y baselines de calidad: siempre, también si un gate falló (es cuando más se necesitan).
+      - name: Subir reportes y baselines de calidad
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: olyze-quality
+          path: |
+            quality/*
+            app/build/reports/lint-results-debug.html
+            app/build/reports/lint-results-debug.xml
+          if-no-files-found: ignore
+          retention-days: 30
+
+      - name: Subir reporte de tests (solo si falló algo)
+        if: failure()
+        uses: actions/upload-artifact@v6
+        with:
+          name: test-reports
+          path: app/build/reports/tests
+          retention-days: 14

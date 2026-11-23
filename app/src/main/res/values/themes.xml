@@ -1,0 +1,12 @@
+<resources>
+    <!--
+        API 35+ (borde a borde obligatorio): `android:statusBarColor` y `android:navigationBarColor` están obsoletos y el
+        sistema los IGNORA — las barras son siempre transparentes y es la app la que dibuja detrás de ellas. El estilo de
+        los iconos (claros sobre fondo oscuro) lo fija `OlyzeSystemBars.apply` desde código (`enableEdgeToEdge`), que es la
+        única vía que funciona igual en API 26-36; por eso aquí ya no se declaran colores de barra.
+        `windowBackground` se conserva: es lo que se ve durante el arranque en frío, antes de que Compose dibuje el degradado.
+    -->
+    <style name="Theme.Olyze" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@color/brand_purple_deep</item>
+    </style>
+</resources>
